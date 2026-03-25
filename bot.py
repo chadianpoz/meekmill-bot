@@ -3,6 +3,7 @@
 
 import json
 import os
+import random
 import sys
 import time
 from datetime import datetime, timezone
@@ -89,19 +90,32 @@ def _gh_headers() -> dict:
     return headers
 
 
+TEMPLATES = [
+    lambda repo, msg: f'BREAKING: Meek Mill pushed to {repo} — "{msg}"',
+    lambda repo, msg: f'Meek Mill just committed:\n\n"{msg}"\n\nRepo: {repo}',
+    lambda repo, msg: f'New code from Meek Mill in {repo}:\n\n"{msg}"',
+    lambda repo, msg: f'Meek Mill is coding again.\n\n"{msg}"\n\n— {repo}',
+]
+
+
 def format_tweet(commit: dict, repo_name: str) -> str:
-    """Format a tweet for a single commit."""
+    """Format a tweet for a single commit using a random template."""
     msg = commit["commit"]["message"].split("\n")[0]
     url = commit["html_url"]
     short_repo = repo_name.split("/")[-1]
 
-    prefix = f"Meek Mill just pushed to {short_repo}:\n\n"
+    template = random.choice(TEMPLATES)
+    # Trim message to fit within tweet limit with URL
     suffix = f"\n\n{url}"
-    max_msg = MAX_TWEET_LEN - len(prefix) - len(suffix) - 2  # 2 for quotes
-    if len(msg) > max_msg:
-        msg = msg[: max_msg - 3] + "..."
+    body = template(short_repo, msg)
+    max_body = MAX_TWEET_LEN - len(suffix)
+    if len(body) > max_body:
+        # Recalculate with truncated message
+        over = len(body) - max_body + 3
+        msg = msg[:-over] + "..."
+        body = template(short_repo, msg)
 
-    return f'{prefix}"{msg}"{suffix}'
+    return f"{body}{suffix}"
 
 
 def run():
