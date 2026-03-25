@@ -91,10 +91,10 @@ def _gh_headers() -> dict:
 
 
 TEMPLATES = [
-    lambda repo, msg: f'BREAKING: Meek Mill pushed to {repo} — "{msg}"',
-    lambda repo, msg: f'Meek Mill just committed:\n\n"{msg}"\n\nRepo: {repo}',
-    lambda repo, msg: f'New code from Meek Mill in {repo}:\n\n"{msg}"',
-    lambda repo, msg: f'Meek Mill is coding again.\n\n"{msg}"\n\n— {repo}',
+    lambda repo, msg: f'BREAKING: @MeekMill pushed to {repo} — "{msg}"',
+    lambda repo, msg: f'New commit from @MeekMill:\n\n"{msg}"\n\nRepo: {repo}',
+    lambda repo, msg: f'New code from @MeekMill in {repo}:\n\n"{msg}"',
+    lambda repo, msg: f'He\'s coding again. @MeekMill just pushed:\n\n"{msg}"\n\n— {repo}',
 ]
 
 
